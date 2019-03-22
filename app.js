@@ -51,7 +51,7 @@ const handler = async (ctx, next) => {
   ctx.set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, token");
   // log request URL:
   // ctx.set("Access-Control-Allow-Origin", "*");
-  // ctx.set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+  ctx.set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT, PATCH");
   // ctx.set("Access-Control-Max-Age", "3600");
   // ctx.set("Access-Control-Allow-Credentials", "true");
   if (ctx.request.method == "OPTIONS") {
@@ -94,6 +94,7 @@ app.use(jwt({secret: 'my_token'}).unless({
     /\/users\/removePerson/,
     /\/users\/login/,
     /\/users\/register/,
+    /\/users\/person/
   ]
 }))
 

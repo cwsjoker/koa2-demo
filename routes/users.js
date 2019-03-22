@@ -146,8 +146,25 @@ router.post('/addHistory', async (ctx, next) => {
 
 // 测试没有jwt
 
+// 获取
+router.get('/person', async function(ctx, next) {
+    const { name, ...params } = ctx.request.query;
+    const reg = new RegExp(name)
+    const query = name ? {
+      name: {$regex : reg},
+      ...params
+    } : {
+      ...params
+    }
+    const data = await Person.find(query).select('_id name age')
+    ctx.body = {
+      code: 0,
+      data
+    }
+})
+
 // 增加
-router.post('/addPerson', async function(ctx, next) {
+router.post('/person', async function(ctx, next) {
   const { name } = ctx.request.body
   if (name) {
     const data = await Person.findOne({'name': name})
@@ -177,25 +194,8 @@ router.post('/addPerson', async function(ctx, next) {
   }
 })
 
-// 获取
-router.get('/getPerson', async function(ctx, next) {
-    const { name, ...params } = ctx.request.query;
-    const reg = new RegExp(name)
-    const query = name ? {
-      name: {$regex : reg},
-      ...params
-    } : {
-      ...params
-    }
-    const data = await Person.find(query).select('_id name age')
-    ctx.body = {
-      code: 0,
-      data
-    }
-})
-
 // 更新
-router.post('/updatePerson', async function(ctx, next) {
+router.patch('/person', async function(ctx, next) {
   const { id, ...params } = ctx.request.body;
     if (id) {
       await Person.where({
@@ -214,8 +214,9 @@ router.post('/updatePerson', async function(ctx, next) {
 })
 
 // 删除
-router.post('/removePerson', async function(ctx, next) {
-  const { id } = ctx.request.body
+router.delete('/person', async function(ctx, next) {
+  // const { id } = ctx.request.body
+  const { id } = ctx.request.query
   if (id) {
     await Person.where({
       _id: id
